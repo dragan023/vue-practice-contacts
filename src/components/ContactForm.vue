@@ -21,7 +21,7 @@
     <span class="c-error-msg" v-if="emailError">Email is required</span>
 
     <button type="submit">Add</button>
-    <button v-if="editMode" @click.prevent="handleUpdate">Save</button>
+    <button v-if="isEditMode" @click.prevent="handleUpdate">Save</button>
   </form>
 </template>
 
@@ -31,8 +31,7 @@ export default {
   data() {
     return {
       newContact: {},
-      emailError: false,
-      editMode: false
+      emailError: false
     };
   },
   methods: {
@@ -46,14 +45,18 @@ export default {
     },
     handleUpdate() {
       this.$emit('formEdited', this.newContact);
-      this.newContact = {}
+      this.newContact = {};
       this.editMode = false;
     }
   },
   watch: {
-    contactToEdit: function(newVal) {
-      this.newContact = newVal;
-      this.editMode = true
+    isEditMode: function() {
+      this.newContact = { ...this.contactToEdit };
+    }
+  },
+  computed: {
+    isEditMode() {
+      return this.isEditing;
     }
   },
   props: {
@@ -61,6 +64,10 @@ export default {
       type: Object,
       required: false,
       default: () => {}
+    },
+    isEditing: {
+      type: Boolean,
+      required: true
     }
   }
 };

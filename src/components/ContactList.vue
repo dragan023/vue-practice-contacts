@@ -4,6 +4,7 @@
       @formSubmitted="handleSubmit"
       @formEdited="handleUpdateContact"
       :contactToEdit="contactToEdit"
+      :isEditing="isEditMode"
     />
     <h1>Contact List:</h1>
     <div class="l-contact-grid">
@@ -43,7 +44,8 @@ export default {
   data() {
     return {
       contactList: contacts,
-      contactToEdit: {}
+      contactToEdit: {},
+      isEditMode: false
     };
   },
   methods: {
@@ -62,15 +64,17 @@ export default {
     },
     handleEditContact(id) {
       this.contactToEdit = this.contactList.find(contact => contact.id == id);
+      this.isEditMode = true;
     },
     handleUpdateContact(updatedContact) {
       this.contactList.forEach(contact => {
         if (!contact.id == updatedContact.id) {
           return false;
         } else {
-          contact.name = updatedContact.firstName;
+          contact.firstName = updatedContact.firstName;
           contact.lastName = updatedContact.lastName;
           contact.email = updatedContact.email;
+          this.isEditMode = false;
         }
       });
     }
